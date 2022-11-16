@@ -1,0 +1,4 @@
+2022:11:16	16:12:44	5602eedf-58b6-4770-840f-d0b7f4a5a8e3	Log event emitted
+2022:11:16	16:14:14	1aa2d8e1-50af-4c40-b136-7f6d66a5f3d3	This is sms log event
+2022:11:16	16:15:42	950b5f5f-db7c-418c-b6b6-0b53b0a192e6	This is sms log event
+2022:11:16	16:15:45	ecfc83b3-ff20-4b6d-a80c-9a6d7cb3168e	This is logging message events
