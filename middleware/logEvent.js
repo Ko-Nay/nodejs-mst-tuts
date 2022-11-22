@@ -14,14 +14,21 @@ const logEvents = async (message, logName) => {
 
     //we wanna append the log
     try{
-        if(!fs.existsSync(path.join(__dirname, 'logs'))) {
-            await fsPromises.mkdir(path.join(__dirname, 'logs'))
+        if(!fs.existsSync(path.join(__dirname,'..', 'logs'))) {
+            await fsPromises.mkdir(path.join(__dirname,'..', 'logs'))
         }
-        await fsPromises.appendFile(path.join(__dirname, 'logs', logName), logItems);
+        await fsPromises.appendFile(path.join(__dirname, '..','logs', logName), logItems);
     }
     catch(err){
         console.log(err);
     }
 }
 
-module.exports = logEvents;
+/**logger middleware */
+const logger = (req, res, next) => {
+    logEvents(`${req.method}\t${req.headers.origin}\t${req.url}`, 'reqLogs.txt');
+    console.log(`${req.method} ${req.url}`)
+    next();
+}
+
+module.exports = {logEvents, logger};

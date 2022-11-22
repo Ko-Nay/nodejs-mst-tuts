@@ -1,6 +1,0 @@
-2022:11:21	21:44:39	c5a319ee-08d4-4524-93c7-a49bffd40f29	/new-page.html 	 GET
-2022:11:21	21:44:39	61d02905-f020-4520-9036-dcbb373feb4d	/css/style.css 	 GET
-2022:11:21	21:44:39	cf8ec3ee-b084-4fd8-9742-edf9c33f5e37	/img/img1.jpg 	 GET
-2022:11:21	21:44:53	794ad2e1-a9f2-46b9-8025-67d8acdad947	/new-pages.html 	 GET
-2022:11:21	21:44:53	2591933c-c3da-467a-9be3-9f60f37549ec	/css/style.css 	 GET
-2022:11:21	21:46:40	13f0e48a-e2c5-4e85-b07a-a46c704af967	/new-pages.html 	 GET
