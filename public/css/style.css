@@ -7,7 +7,7 @@
 body {
     font-size: 36px;
     min-height: 100vh;
-    color: #fff;
+    color: rgb(253, 9, 9);
     background-color: #000;
     display: grid;
     place-content: center;
