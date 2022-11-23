@@ -1,5 +1,4 @@
 /** creating web server by express */
-const { application } = require('express');
 const express = require('express');
 const cors = require('cors');
 const app = express();
