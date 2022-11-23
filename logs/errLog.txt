@@ -18,3 +18,5 @@
 2022:11:22	21:08:32	2f090128-5d5c-4021-aa4f-dc717699e6d6	TypeError	Cannot read property 'employees' of undefined
 2022:11:22	21:08:36	b86078db-c09b-4d70-9bc6-4f92f495eff8	TypeError	Cannot read property 'employees' of undefined
 2022:11:22	21:10:07	d792cbf3-de43-4cbe-a82c-def690772d71	TypeError	Cannot read property 'employees' of undefined
+2022:11:22	22:19:09	b48ec5b8-840b-427c-81f9-975a9b3c29ff	ReferenceError	data is not defined
+2022:11:22	22:47:47	06026081-e9bc-482b-bd92-733576fa9958	ReferenceError	firstname is not defined
