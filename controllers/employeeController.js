@@ -1,7 +1,7 @@
 const { parse } = require('date-fns');
 
 const data = {
-    employees : require('../data/employees.json'),
+    employees : require('../models/employees.json'),
     setEmployees : function (data) { this.employees = data }
 };
 
