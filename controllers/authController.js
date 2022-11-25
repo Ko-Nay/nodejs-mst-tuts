@@ -22,12 +22,21 @@ const handleLogin = async ( req, res ) => {
 
     if(match){
 
+        const roles = Object.values(foundUser.roles);
+        if(!roles) return res.sendStatus(401);
+        console.log('roles: ' , roles);
+
         //giving access and refers tokens to the found user
 
         const accessToken = jwt.sign(
-            { "username" : foundUser.username },
+            { 
+                "UserInfo" : {
+                    "username" : foundUser.username,
+                    "roles" : roles,
+                }
+            },
             process.env.ACCESS_TOKEN_SECRET,
-            { expiresIn : '30s'},
+            { expiresIn : '3m'},
         );
 
         const refreshToken = jwt.sign(
@@ -47,7 +56,7 @@ const handleLogin = async ( req, res ) => {
         );
         
         //saving token on httpOnly cookie for better secure
-        res.cookie('jwt', refreshToken, { httpOnly: true, maxAge : 24 * 60 * 60 * 1000 });
+        res.cookie('jwt', refreshToken, { httpOnly: true, secure: true,  maxAge : 24 * 60 * 60 * 1000 });
         
         //for front-end
         res.json({accessToken});

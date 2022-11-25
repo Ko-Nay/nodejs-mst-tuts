@@ -20,8 +20,12 @@ const handleNewRegister = async (req,res) =>{
         //hash the password
         const hashedPwd = await bcrypt.hash(pwd, 10);
 
-        //store the new user in to the db
-        const newUser = { "username" : user, "password" : hashedPwd }
+        //create and store the new user in to the db        
+        const newUser = { 
+            "username" : user,
+            "roles" : { "User" : 2001 },
+            "password" : hashedPwd 
+        };
         userDB.setUsers([...userDB.users, newUser])
 
         //actual inserting data to the db

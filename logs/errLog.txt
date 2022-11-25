@@ -25,3 +25,4 @@
 2022:11:24	09:53:07	d778ac31-429f-4536-a074-4a06a91ede7b	TypeError	Cannot read property 'jwt' of undefined
 2022:11:24	09:54:00	9cbd05d1-949f-4820-883e-11fd37a2f9c7	TypeError	Cannot read property 'jwt' of undefined
 2022:11:24	09:55:57	52c9414b-106d-45d8-95af-3e2bf3baf42d	TypeError	Cannot read property 'jwt' of undefined
+2022:11:25	12:10:27	b989e4f3-b4a8-4dc2-99bf-bda3af3e691b	TypeError	rolesArray.includes(...).find is not a function
