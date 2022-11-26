@@ -1,64 +1,77 @@
-const { parse } = require('date-fns');
+const Employee = require('../models/Employee');
 
-const data = {
-    employees : require('../models/employees.json'),
-    setEmployees : function (data) { this.employees = data }
+
+const getAllEmployees = async (req, res) => {
+    //get all employee docs form db
+    const employees = await Employee.find();
+    if(!employees) return res.status(204).json({'message': 'No employees found'});
+    res.json(employees)
 };
 
-const getAllEmployees = (req, res) => {
-    res.json(data.employees)
+const createNewEmployees = async (req, res) => {
+    if(!req.body.firstname || !req.body.lastname){
+        res.status(400).json({ 'message' : 'Fist and Last names are required'});
+    }    
+
+    //if all both req are received
+    try{
+        //then create and insert doc to the collection
+        const result = await Employee.create({
+            firstname : req.body.firstname,
+            lastname : req.body.lastname
+        });
+        res.status(201).json(result)
+
+    }catch(err){
+        console.log(err);
+    }
 };
 
-const createNewEmployees = (req, res) => {
-    const newEmployee = {
-        id : data.employees[data.employees.length - 1].id + 1 || 1,
-        firstname : req.body.firstname,
-        lastname : req.body.lastname,
+const updateEmployees = async (req, res) => {
+    //need to pass id req to get and update specific employee
+    if(!req.body.id) {
+        return res.status(400).json({ 'message' : 'Employee ID is required'});
     }
 
-    if(!newEmployee.firstname || !newEmployee.lastname) {
-        return res.status(400).json({ 'message' : 'Fist name and last name are required'});
+    //find employee from db that match received id
+    const employee = await Employee.findOne({ _id : req.body.id }).exec();
+    if(!employee){ 
+        return res.status(204).json({ 'message' : `No employee mathch ID ${req.body.id}.`});
     }
 
-    data.setEmployees([...data.employees, newEmployee]);
-    res.status(201).json(data.employees);
+    //first and last names will be updated when employee is found
+    if(req.body.firstname) employee.firstname = req.body.firstname;
+    if(req.body.lastname) employee.lastname = req.body.lastname;
+
+    //after updating, save the changes
+    const result = await employee.save();
+    res.json(result);
 };
 
-const updateEmployees = (req, res) => {
-    const updateEmployee = data.employees.find((emp) => emp.id === parseInt(req.body.id));
-    if(!updateEmployee){
-        return res.status(400).json({'message' : `Employee ID ${req.body.id} not found`})
+const deleteEmployee = async (req, res) => {
+    if(!req.body.id){
+        return res.status(400).json({'message' : 'Employee ID is required'});
     }
-    if(req.body.firstname) updateEmployee.firstname = req.body.firstname;
-    if(req.body.lastname) updateEmployee.lastname =  req.body.lastname;
 
-    /** remove the previous employee and replace the updated data */
-    const removeOldEmployee = data.employees.filter( (oldEmployee) => oldEmployee.id !== parseInt(req.body.id))
-    const updatedEmployee = [ ...removeOldEmployee, updateEmployee];
-    data.setEmployees[updatedEmployee];
+    const employee = await Employee.findOne({ _id : req.body.id }).exec();
+    if(!employee) return res.status(204).json({'message' : `No Employee matchs ID ${req.body.id}`});
 
-    res.status(200).json(data.employees)
+    //delete employee that match req.body.id and don't need to save since it has no changes
+    const result = await employee.deleteOne({_id : req.body.id });
+    res.json(result);
 };
 
-const deleteEmployee = (req, res) => {
-    const deleteEmployee = data.employees.find((emp) => emp.id === parseInt(req.body.id));
-    if(!deleteEmployee){
-        return res.status(400).json({'message' : `Employee ID ${req.body.id} not found`})
+const getEmployee = async (req,res) => {
+    //accept id as params from url
+    if(!req.params.id){
+        return res.status(400).json({ 'message' : 'ID   params is required'});
     }
-    
-    /** remove the previous employee and replace the updated data */
-    const filteredArray = data.employees.filter( (oldEmployee) => oldEmployee.id !== parseInt(req.body.id))
-    data.setEmployees([...filteredArray]);
-
-    res.json(data.employees)
-};
-
-const getEmployee = (req,res) => {
-    const employee = data.employees.find((emp) => emp.id === parseInt(req.params.id));
-    if(!deleteEmployee){
-        return res.status(400).json({'message' : `Employee ID ${req.params.id} not found`})
+    const employee = await Employee.findOne({_id : req.params.id}).exec();
+    if(!employee){
+        return res.status(204).json({'message' : `No employee match ID ${req.params.id}.`});
     }
-    res.status(200).json(employee)
+   
+    res.json(employee);
 };
 
 

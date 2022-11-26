@@ -1,21 +1,12 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-require('dotenv').config();
-const fsPromises = require('fs').promises;
-const path = require('path')
-
-const userDB = {
-    users : require('../models/users'),
-    setUsers : function (data) { this.users = data }
-};
-
+const User = require('../models/User');
 
 const handleLogin = async ( req, res ) => {
     const { user, pwd } = req.body;
     if(!user || !pwd ) return res.status(400).json({ "message" : "Username and Password are required"});
 
-    const foundUser = userDB.users.find( person => person.username === user );
-    console.log(foundUser);
+    const foundUser = await User.findOne({ username : user }).exec();
     if(!foundUser) return res.sendStatus(401);
 
     const match = await bcrypt.compare(pwd, foundUser.password);
@@ -24,7 +15,6 @@ const handleLogin = async ( req, res ) => {
 
         const roles = Object.values(foundUser.roles);
         if(!roles) return res.sendStatus(401);
-        console.log('roles: ' , roles);
 
         //giving access and refers tokens to the found user
 
@@ -45,18 +35,12 @@ const handleLogin = async ( req, res ) => {
             { expiresIn : '1d' }
         );
 
-        //saving the refreshToken of foundUser and the other users into the database
-        const otherUsers = userDB.users.filter( person => person.username !== foundUser.username );
-        const currentUser = { ...foundUser, refreshToken};
-        userDB.setUsers([ ...otherUsers, currentUser ]);
-
-        await fsPromises.writeFile(
-            path.join(__dirname, '..', 'models','users.json'),
-            JSON.stringify(userDB.users)
-        );
+        foundUser.refreshToken = refreshToken;
+        const result = await foundUser.save();
+        console.log(result);
         
         //saving token on httpOnly cookie for better secure
-        res.cookie('jwt', refreshToken, { httpOnly: true, secure: true,  maxAge : 24 * 60 * 60 * 1000 });
+        res.cookie('jwt', refreshToken, { httpOnly: true,  maxAge : 24 * 60 * 60 * 1000 });
         
         //for front-end
         res.json({accessToken});

@@ -1,19 +1,14 @@
-const userDB = {
-    users : require('../models/users'),
-    setUsers : function (data) { this.users = data }
-};
-
 const jwt = require('jsonwebtoken');
-require('dotenv').config();
+const User = require('../models/User');
 
 
-const handleRefreshToken = (req, res) => {
+const handleRefreshToken = async (req, res) => {
     const cookies = req.cookies;
-    console.log(cookies);
+    
     if(! cookies && cookies.jwt ) return res.sendStatus(401);
     const refreshToken = cookies.jwt;
 
-    const foundUser = userDB.users.find( person => person.refreshToken === refreshToken );
+    const foundUser = await User.findOne({ refreshToken : refreshToken }).exec();
     if( !foundUser ) return res.sendStatus(403);
 
     jwt.verify(

@@ -1,22 +1,27 @@
 /** creating web server by express */
+require('dotenv').config()
 const express = require('express');
 const cors = require('cors');
 const app = express();
 const path = require('path');
+const cookieParser = require('cookie-parser');
+const mongoose = require('mongoose');
 
 const {logger} = require('./middleware/logEvent');
 const errorHandler = require('./middleware/errorHandler');
 const corsOptions = require('./config/corsOption');
 const verifyJWT = require('./middleware/jwtVerify');
-const cookieParser = require('cookie-parser');
+const connectDB = require('./config/connDB');
 
 const PORT = process.env.PORT || 3500 ; 
+
+connectDB();
 
 app.use(logger);
 
 app.use(cors(corsOptions));
 
-app.use(express.urlencoded({ urlencoded : false}));
+app.use(express.urlencoded({ extended : false}));
 app.use(express.json());
 
 app.use(cookieParser());
@@ -50,4 +55,8 @@ app.all('*', (req, res) =>{
 /** error handler */
 app.use(errorHandler)
 
-app.listen(PORT, () => console.log(`Server is running on ${PORT}`));
+mongoose.connection.once('open', () => {
+    console.log('Connected to DB');
+    app.listen(PORT, () => console.log(`Server is running on ${PORT}`));
+
+})
